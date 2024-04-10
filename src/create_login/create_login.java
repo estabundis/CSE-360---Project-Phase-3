@@ -1,5 +1,10 @@
 package create_login;
 
+import java.io.*;
+import java.util.*;
+
+import Patient.Patient;
+import application.Main;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -162,7 +167,7 @@ public class create_login extends Application {
         PasswordField reEnterPasswordField = new PasswordField();
         GridPane.setConstraints(reEnterPasswordField, 1, 4);
 
-        // Email label and text area
+        // email label and text area
         Label emailLabel = new Label("Email Address:");
         emailLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         GridPane.setConstraints(emailLabel, 0, 5);
@@ -171,28 +176,49 @@ public class create_login extends Application {
         emailField.setPrefColumnCount(20);
         GridPane.setConstraints(emailField, 1, 5);
 
-        // Create Account button
+        // create Account button
         Button createAccountButton = new Button("Create Account");
         createAccountButton.setStyle("-fx-background-color: #0077cc; -fx-text-fill: white;");
         GridPane.setConstraints(createAccountButton, 0, 6, 2, 1);
         createAccountButton.setOnAction(e -> {
-            // Add create account functionality here
+            Random random = new Random();
+            int patientID = random.nextInt(90000) + 10000;
+            Patient patientObject = new Patient();
+
+            // serialize to a .bin
+            try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(patientID + "_patient.bin"))) {
+                outputStream.writeObject(patientObject);
+                System.out.println("Patient object saved to file: " + patientID + "_patient.bin");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+            // close stage
+            Stage currentStage = (Stage) createAccountButton.getScene().getWindow();
+            currentStage.close();
+
+            // OPEN THE MAIN DASH
+            // I DIDNT KNOW THERE WAS MORE THAN ONE VERSION
+            openMainDashboard();
         });
 
-        // Create Staff Account button
         Button createStaffAccountButton = new Button("Create Staff Account");
         createStaffAccountButton.setStyle("-fx-background-color: #0077cc; -fx-text-fill: white;");
         GridPane.setConstraints(createStaffAccountButton, 0, 7, 2, 1);
         createStaffAccountButton.setOnAction(e -> {
-            // Open a new window for creating a staff account
+
             Stage staffAccountStage = new Stage();
             staffAccountStage.setTitle("Create Staff Account");
-            // For now, a blank scene
-            staffAccountStage.setScene(new Scene(new BorderPane(), 400, 300));
+            create_doctor createDoctorAccount = new create_doctor();
+            Scene staffAccountScene = createDoctorAccount.createScene();
+
+            staffAccountStage.setScene(staffAccountScene);
             staffAccountStage.show();
+
+            Stage currentStage = (Stage) createAccountButton.getScene().getWindow();
+            currentStage.close();
         });
 
-        // Add elements to grid
         grid.getChildren().addAll(createAccountTitle, firstNameLabel, firstNameField, lastNameLabel, lastNameField,
                 passwordLabel, passwordField, reEnterPasswordLabel, reEnterPasswordField, emailLabel, emailField,
                 createAccountButton, createStaffAccountButton);
@@ -200,6 +226,12 @@ public class create_login extends Application {
         return grid;
     }
 
+    private void openMainDashboard() {
+        Main main = new Main();
+        Stage mainStage = new Stage();
+        main.start(mainStage);
+    }
+    
     public static void main(String[] args) {
         launch(args);
     }
