@@ -31,7 +31,9 @@ public class Testingpatient {
         	String enterEmail = myPatient.nextLine();
         	System.out.print("Please enter your password: ");
         	String enterPass = myPatient.nextLine();
-        	newPatient.createAccount(enterFName, enterLName, Integer.parseInt(enterDay), enterEmail, enterPass);
+        	newPatient.createAccount(enterFName, enterLName, enterDay, enterEmail, enterPass);
         }
+        
+        myPatient.close();
     }
 }

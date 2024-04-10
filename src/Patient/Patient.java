@@ -1,17 +1,20 @@
 package Patient;
 
 import java.util.*;
+import Messaging.messages;
+import create_login.doctor;
 
 public class Patient 
 {
 	// Attributes 
 	private String firstName;
 	private String lastName;
-	private int birthday;
+	private String birthday;
 	private String email;
 	private String password;
 	private String patientID;
 	private List<String> healthHistory;
+	private List<messages> portal;
 	
 	
 	// Methods 
@@ -24,7 +27,7 @@ public class Patient
 	}
 	
 	// Method to create an account 
-	public void createAccount(String firstName, String lastName, int birthday, String email, String password)
+	public void createAccount(String firstName, String lastName, String birthday, String email, String password)
 	{
 		// Generate patient ID after patient click on create account button 
 		this.firstName = firstName;
@@ -34,10 +37,18 @@ public class Patient
 		this.password = password;
 		this.patientID = generatePatientID();
 		
-		System.out.println("Sign up successful. Welcome, " + firstName + " " + lastName + "!");
-        // Display options available to the user
-        displayUserOptions();
+//		System.out.println("Sign up successful. Welcome, " + firstName + " " + lastName + "!");
+//        // Display options available to the user
+//        displayUserOptions();
 		
+	}
+	
+	public String getFirstName() {
+		return firstName;
+	}
+	
+	public void addPortal(doctor Doctor){
+		portal.add(new messages(Doctor.getFirstName(), firstName));
 	}
 	
 	// Method to log in 
@@ -59,7 +70,7 @@ public class Patient
 	}
 	
 	// Method 
-	public void updateContactInfo(String firstName, String lastName, int birthday, String email, String password)
+	public void updateContactInfo(String firstName, String lastName, String birthday, String email, String password)
 	{
 		// Update patient's personal information
         this.firstName = firstName;

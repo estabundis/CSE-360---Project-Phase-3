@@ -1,4 +1,9 @@
 package create_login;
+import application.Main;
+
+import Messaging.messages;
+import Patient.Patient;
+import create_login.doctor;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -10,18 +15,19 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
-public class create_login extends Application {
-
-    @Override
+public class create_login extends Application{
+	public static void main(String[] args) {
+        launch(args);
+    }
+    
     public void start(Stage primaryStage) {
         // Create the top blue bar
         HBox topBar = createTopBar();
 
         // Create the login section
-        GridPane loginGrid = createLoginGrid();
+        GridPane loginGrid = createLoginGrid(primaryStage);
 
         // Create the create account section
         GridPane createAccountGrid = createCreateAccountGrid();
@@ -36,7 +42,7 @@ public class create_login extends Application {
         // Align the sections horizontally with separator
         HBox root = new HBox(20, createAccountGrid, separator, loginGrid);
         root.setAlignment(Pos.CENTER);
-
+ 
         // Set padding for the root
         root.setPadding(new Insets(20));
 
@@ -75,7 +81,7 @@ public class create_login extends Application {
     }
 
     // Method to create the login section
-    private GridPane createLoginGrid() {
+    private GridPane createLoginGrid(Stage primaryStage) {
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.TOP_CENTER); // Align to the top
         grid.setHgap(10);
@@ -104,12 +110,14 @@ public class create_login extends Application {
         GridPane.setConstraints(passwordField, 1, 2);
 
         // Login button
+        Patient mine = new Patient();
+        mine.createAccount("Kumar", "Pratyusha", "13/3/2004", "pkz@gmail.com", "pass");
         Button loginButton = new Button("Login");
+//        loginButton.setOnAction(e -> Main.Dashboard(primaryStage, mine));
+        
         loginButton.setStyle("-fx-background-color: #0077cc; -fx-text-fill: white;");
         GridPane.setConstraints(loginButton, 0, 3, 2, 1);
-        loginButton.setOnAction(e -> {
-            // Add login functionality here
-        });
+        loginButton.setOnAction(e -> Main.Dashboard(primaryStage, mine));
 
         // Add elements to grid
         grid.getChildren().addAll(loginTitle, idLabel, idTextArea, passwordLabel, passwordField, loginButton);
@@ -198,9 +206,5 @@ public class create_login extends Application {
                 createAccountButton, createStaffAccountButton);
 
         return grid;
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

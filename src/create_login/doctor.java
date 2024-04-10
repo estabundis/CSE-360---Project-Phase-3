@@ -1,8 +1,15 @@
 package create_login;
+
+import java.util.List;
+
+import Messaging.messages;
+import Patient.Patient;
+
 public class doctor {
     private String firstName;
     private String lastName;
     private String prescription;
+    private List<messages> portal;
 
     public doctor(String firstName, String lastName) {
         this.firstName = firstName;
@@ -41,6 +48,10 @@ public class doctor {
         System.out.println("Doctor " + firstName + " " + lastName + " is entering report summary...");
     }
 
+    public void addPatientMessaging(Patient myPatient){
+    	portal.add(new messages(firstName, myPatient.getFirstName()));
+    }
+    
     public void respondReceiveMessages() {
         // Method implementation to respond to received messages
         System.out.println("Doctor " + firstName + " " + lastName + " is responding to received messages...");
