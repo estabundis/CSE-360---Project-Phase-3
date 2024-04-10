@@ -5,6 +5,5 @@ module CSE360_ph3 {
 	exports create_login;
 	opens application to javafx.graphics, javafx.fxml;
 	exports Profile;
-	exports create_login;
 	exports Patient;
 }

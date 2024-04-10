@@ -1,5 +1,6 @@
 package Patient;
 
+import application.Main;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -238,6 +239,14 @@ public class Healthform extends Application {
 	        GridPane.setConstraints(back, 0, 10, 2, 1);
 	        back.setStyle("-fx-background-color: #0000ff; -fx-text-fill: white;");
 	        
+	        back.setOnAction(e -> {
+	            // close stage
+	            Stage currentStage = (Stage)back.getScene().getWindow();
+	            currentStage.close();
+
+	            openMainDashboard();
+	        });
+	        
 	        gridPane.getChildren().addAll(
 	                detailTitle, separator, check,
 	                vbox, hbox3,hbox4, hbox5,hbox6,
@@ -245,4 +254,10 @@ public class Healthform extends Application {
 			
 			return gridPane;
 		}
+	
+    private void openMainDashboard() {
+        Main main = new Main();
+        Stage mainStage = new Stage();
+        main.start(mainStage);
+    }
 }

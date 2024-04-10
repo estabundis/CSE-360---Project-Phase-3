@@ -1,5 +1,12 @@
 package Profile;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.Random;
+
+import Patient.Patient;
+import application.Main;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -33,10 +40,7 @@ public class Profile extends Application {
         
         // Add the left content to the left region of the BorderPane
         root.setLeft(leftContent);
-        
-        
-        
-        
+
         // Add the center content to the center region of the BorderPane
         root.setCenter(gridpane);
         
@@ -205,6 +209,14 @@ public class Profile extends Application {
         GridPane.setConstraints(back, 0, 22, 2, 1);
         back.setStyle("-fx-background-color: #0000ff; -fx-text-fill: white;");
         
+        back.setOnAction(e -> {
+            // close stage
+            Stage currentStage = (Stage)back.getScene().getWindow();
+            currentStage.close();
+
+            openMainDashboard();
+        });
+        
         gridPane.getChildren().addAll(
                 detailTitle, separator, nameTitle,
                 fName, firstName,lName, lastName,saveName,
@@ -244,6 +256,12 @@ public class Profile extends Application {
 		return vbox;
 		
 	}
+	
+    private void openMainDashboard() {
+        Main main = new Main();
+        Stage mainStage = new Stage();
+        main.start(mainStage);
+    }
 	
 	
 	
