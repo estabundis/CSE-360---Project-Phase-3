@@ -3,10 +3,11 @@ package Patient;
 import java.util.*;
 import Messaging.messages;
 import create_login.doctor;
+import java.io.Serializable;
 
-public class Patient 
+public class Patient implements Serializable
 {
-	// Attributes 
+	// Attributes
 	private String firstName;
 	private String lastName;
 	private String birthday;
@@ -15,50 +16,50 @@ public class Patient
 	private String patientID;
 	private List<String> healthHistory;
 	private List<messages> portal;
-	
-	
-	// Methods 
-	
-	// Provide personal information 
-	// This will be use when the patients enter their input 
+
+
+	// Methods
+
+	// Provide personal information
+	// This will be use when the patients enter their input
 	public Patient()
 	{
 		this.healthHistory = new ArrayList<>();
 	}
-	
-	// Method to create an account 
+
+	// Method to create an account
 	public void createAccount(String firstName, String lastName, String birthday, String email, String password)
 	{
-		// Generate patient ID after patient click on create account button 
+		// Generate patient ID after patient click on create account button
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.birthday = birthday;
 		this.email = email;
 		this.password = password;
 		this.patientID = generatePatientID();
-		
+
 //		System.out.println("Sign up successful. Welcome, " + firstName + " " + lastName + "!");
 //        // Display options available to the user
 //        displayUserOptions();
-		
+
 	}
-	
+
 	public String getFirstName() {
 		return firstName;
 	}
-	
+
 	public void addPortal(doctor Doctor){
 		portal.add(new messages(Doctor.getFirstName(), firstName));
 	}
-	
-	// Method to log in 
+
+	// Method to log in
 	public void logIn(String userEmail, String userPassword)
 	{
-		// Provide email and password to log into the system 
+		// Provide email and password to log into the system
 		if(userEmail.equals(email) && userPassword.equals(password))
 		{
 			// Proceed to the main UI page
-			
+
 			System.out.println("Login successful. Welcome, " + firstName + " " + lastName + "!");
 	        // Display options available to the user
 	        displayUserOptions();
@@ -68,8 +69,8 @@ public class Patient
 			System.out.print("Your email or password is incorrect. Please try again!");
 		}
 	}
-	
-	// Method 
+
+	// Method
 	public void updateContactInfo(String firstName, String lastName, String birthday, String email, String password)
 	{
 		// Update patient's personal information
@@ -79,7 +80,7 @@ public class Patient
         this.email = email;
         this.password = password;
 	}
-	
+
 	public void requestHealthHistory()
 	{
         if (healthHistory.isEmpty()) {
@@ -91,7 +92,7 @@ public class Patient
             }
         }
 	}
-	
+
 	public String generatePatientID()
 	{
 		int uniqueNum;
@@ -99,7 +100,7 @@ public class Patient
     	uniqueNum = random.nextInt(90000) + 10000;
     	return Integer.toString(uniqueNum);
 	}
-	
+
 	private void displayUserOptions() {
 	    System.out.println("Options:");
 	    System.out.println("1. Update contact information");
@@ -109,4 +110,3 @@ public class Patient
 
 	}
 }
-

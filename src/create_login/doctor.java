@@ -4,8 +4,9 @@ import java.util.List;
 
 import Messaging.messages;
 import Patient.Patient;
+import java.io.Serializable;
 
-public class doctor {
+public class doctor implements Serializable {
     private String firstName;
     private String lastName;
     private String prescription;
@@ -51,7 +52,7 @@ public class doctor {
     public void addPatientMessaging(Patient myPatient){
     	portal.add(new messages(firstName, myPatient.getFirstName()));
     }
-    
+
     public void respondReceiveMessages() {
         // Method implementation to respond to received messages
         System.out.println("Doctor " + firstName + " " + lastName + " is responding to received messages...");
