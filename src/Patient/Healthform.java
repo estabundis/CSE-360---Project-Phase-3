@@ -62,10 +62,6 @@ public class Healthform extends Application {
         primaryStage.setTitle("Fixed Size Example");
         primaryStage.show();
     }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
     
 	public VBox previewView() {
 		VBox vbox1 = new VBox();
@@ -239,13 +235,7 @@ public class Healthform extends Application {
 	        GridPane.setConstraints(back, 0, 10, 2, 1);
 	        back.setStyle("-fx-background-color: #0000ff; -fx-text-fill: white;");
 	        
-	        back.setOnAction(e -> {
-	            // close stage
-	            Stage currentStage = (Stage)back.getScene().getWindow();
-	            currentStage.close();
-
-	            openMainDashboard();
-	        });
+//	        back.setOnAction(e -> Main.Dashboard(primaryStage, mine));
 	        
 	        gridPane.getChildren().addAll(
 	                detailTitle, separator, check,
@@ -255,9 +245,9 @@ public class Healthform extends Application {
 			return gridPane;
 		}
 	
-    private void openMainDashboard() {
-        Main main = new Main();
-        Stage mainStage = new Stage();
-        main.start(mainStage);
-    }
+//    private void openMainDashboard() {
+//        Main main = new Main();
+//        Stage mainStage = new Stage();
+//        main(mainStage);
+//    }
 }

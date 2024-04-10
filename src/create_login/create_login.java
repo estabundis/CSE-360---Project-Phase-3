@@ -7,6 +7,8 @@ import create_login.doctor;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import Patient.Patient;
 import application.Main;
@@ -16,6 +18,7 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -115,14 +118,55 @@ public class create_login extends Application{
         GridPane.setConstraints(passwordField, 1, 2);
 
         // Login button
-        Patient mine = new Patient();
-        mine.createAccount("Kumar", "Pratyusha", "13/3/2004", "pkz@gmail.com", "pass");
+//        Patient mine = new Patient();
+//        mine.createAccount("Kumar", "Pratyusha", "13/3/2004", "pkz@gmail.com", "pass");
         Button loginButton = new Button("Login");
 //        loginButton.setOnAction(e -> Main.Dashboard(primaryStage, mine));
 
         loginButton.setStyle("-fx-background-color: #0077cc; -fx-text-fill: white;");
         GridPane.setConstraints(loginButton, 0, 3, 2, 1);
-        loginButton.setOnAction(e -> Main.Dashboard(primaryStage, mine));
+        loginButton.setOnAction(e -> {
+        	if(passwordField.getText().isBlank()) {
+        		Alert b = new Alert(AlertType.INFORMATION);
+        		b.setContentText("Please make sure your password is correct");
+        		b.show();
+        	}
+        	else {
+        		String id = idTextArea.getText();
+            	String password = passwordField.getText();
+            	if(id.length()==5) {
+            		String filename = id+"_patient.bin";
+            		try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filename))) {
+                        Patient obj = (Patient) objectInputStream.readObject();
+                        // Process the object as needed
+                        System.out.println("Object read from file: " + obj.getFirstName());
+                        Main.Dashboard(primaryStage, obj);
+                    } catch (IOException | ClassNotFoundException ex) {
+                        ex.printStackTrace();
+                    }
+            	}
+            	else if(id.length()==6){
+            		String filename = id+"_Doctor.bin";
+            		try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filename))) {
+                        doctor obj = (doctor) objectInputStream.readObject();
+                        // Process the object as needed
+                        System.out.println("Object read from file: " + obj.getFirstName());
+                        Main.Dashboard(primaryStage, obj);
+                    } catch (IOException | ClassNotFoundException ex) {
+                        ex.printStackTrace();
+                    }
+            		
+            	}
+            	else {
+            		Alert a = new Alert(AlertType.NONE);
+            		a.setAlertType(AlertType.INFORMATION);
+            		a.setContentText("Please enter a valid id");
+            		a.show();
+            	}
+            	
+        		
+        	}
+        });
 
         // Add elements to grid
         grid.getChildren().addAll(loginTitle, idLabel, idTextArea, passwordLabel, passwordField, loginButton);
@@ -189,25 +233,38 @@ public class create_login extends Application{
         createAccountButton.setStyle("-fx-background-color: #0077cc; -fx-text-fill: white;");
         GridPane.setConstraints(createAccountButton, 0, 6, 2, 1);
         createAccountButton.setOnAction(e -> {
-            Random random = new Random();
-            int patientID = random.nextInt(90000) + 10000;
-            Patient patientObject = new Patient();
+        	if(firstNameField.getText().isBlank() || lastNameField.getText().isBlank() || emailField.getText().isBlank() || passwordField.getText().isBlank()) {
+        		Alert b = new Alert(AlertType.INFORMATION);
+        		b.setContentText("Please fill out all fields");
+        		b.show();
+        	}
+        	else if (!passwordField.getText().equals(reEnterPasswordField.getText())) {
+        		Alert b = new Alert(AlertType.INFORMATION);
+        		b.setContentText(passwordField.getText() + " " + reEnterPasswordField.getText());
+        		
+        		b.show();
+        	}
+        	else if(!isValidEmail(emailField.getText())) {
+        		Alert b = new Alert(AlertType.INFORMATION);
+        		b.setContentText("Please make sure your email is in the correct format");
+        		b.show();
+        	}
+        	else {
+        		Random random = new Random();
+                int patientID = random.nextInt(90000) + 10000;
+                Patient patientObject = new Patient();
+                patientObject.createAccount(firstNameField.getText(),lastNameField.getText(), "Date not available", emailLabel.getText(),passwordLabel.getText());
 
-            // serialize to a .bin
-            try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(patientID + "_patient.bin"))) {
-                outputStream.writeObject(patientObject);
-                System.out.println("Patient object saved to file: " + patientID + "_patient.bin");
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+                // serialize to a .bin
+                try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(patientID + "_patient.bin"))) {
+                    outputStream.writeObject(patientObject);
+                    System.out.println("Patient object saved to file: " + patientID + "_patient.bin");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
 
-            // close stage
-            Stage currentStage = (Stage) createAccountButton.getScene().getWindow();
-            currentStage.close();
-
-            // OPEN THE MAIN DASH
-            // I DIDNT KNOW THERE WAS MORE THAN ONE VERSION
-            openMainDashboard();
+        	}
+            
         });
 
         Button createStaffAccountButton = new Button("Create Staff Account");
@@ -224,7 +281,7 @@ public class create_login extends Application{
             staffAccountStage.show();
 
             Stage currentStage = (Stage) createAccountButton.getScene().getWindow();
-            currentStage.close();
+//            currentStage.close();
         });
 
         grid.getChildren().addAll(createAccountTitle, firstNameLabel, firstNameField, lastNameLabel, lastNameField,
@@ -233,14 +290,11 @@ public class create_login extends Application{
 
         return grid;
     }
-
-    private void openMainDashboard() {
-        Main main = new Main();
-        Stage mainStage = new Stage();
-        main.start(mainStage);
-    }
-
-    public static void main(String[] args) {
-        launch(args);
+    
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }

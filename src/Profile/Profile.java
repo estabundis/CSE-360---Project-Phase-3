@@ -209,13 +209,13 @@ public class Profile extends Application {
         GridPane.setConstraints(back, 0, 22, 2, 1);
         back.setStyle("-fx-background-color: #0000ff; -fx-text-fill: white;");
         
-        back.setOnAction(e -> {
-            // close stage
-            Stage currentStage = (Stage)back.getScene().getWindow();
-            currentStage.close();
-
-            openMainDashboard();
-        });
+//        back.setOnAction(e -> {
+//            // close stage
+//            Stage currentStage = (Stage)back.getScene().getWindow();
+//            currentStage.close();
+//
+//            openMainDashboard();
+//        });
         
         gridPane.getChildren().addAll(
                 detailTitle, separator, nameTitle,
@@ -256,12 +256,6 @@ public class Profile extends Application {
 		return vbox;
 		
 	}
-	
-    private void openMainDashboard() {
-        Main main = new Main();
-        Stage mainStage = new Stage();
-        main.start(mainStage);
-    }
 	
 	
 	

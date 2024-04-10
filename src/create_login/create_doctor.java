@@ -2,6 +2,8 @@ package create_login;
 
 import java.io.*;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import application.Main;
 import javafx.application.Application;
@@ -9,6 +11,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -131,25 +135,42 @@ public void start(Stage primaryStage) {
         GridPane.setConstraints(createAccountButton, 0, 7, 2, 1);
         createAccountButton.setOnAction(e -> {
             // generate a random 6-digit ID
-            Random random = new Random();
-            int doctorID = random.nextInt(900000) + 100000;
-            String firstName = firstNameField.getText();
-            String lastName = lastNameField.getText();
-            doctor doctorObject = new doctor(firstName, lastName);
-
-            // serialize to .bin
-            try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(doctorID + "_Doctor.bin"))) {
-                outputStream.writeObject(doctorObject);
-                System.out.println("Doctor object saved to file: " + doctorID + "_Doctor.bin");
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            if(firstNameField.getText().isBlank() || lastNameField.getText().isBlank() || passwordField.getText().isBlank() || emailField.getText().isBlank() || reEnterPasswordField.getText().isBlank()) {
+            	Alert b = new Alert(AlertType.INFORMATION);
+        		b.setContentText("Please make sure all the fields are filled in");
+        		b.show();
             }
-            
-            Stage currentStage = (Stage) createAccountButton.getScene().getWindow();
-            currentStage.close();
+            else if (!isValidEmail(emailField.getText())) {
+            	Alert b = new Alert(AlertType.INFORMATION);
+        		b.setContentText("Please make sure email is correct");
+        		b.show();
+            }
+            else if(!passwordField.getText().equals(reEnterPasswordField.getText())){
+            	Alert b = new Alert(AlertType.INFORMATION);
+        		b.setContentText("Please make sure passwords are matching");
+        		b.show();
+        	}
+            else {
+            	Random random = new Random();
+                int doctorID = random.nextInt(900000) + 100000;
+                String firstName = firstNameField.getText();
+                String lastName = lastNameField.getText();
+                doctor doctorObject = new doctor(firstName, lastName);
 
-            // OPEN THE DASHBOARD
-            openMainDashboard();
+                // serialize to .bin
+                try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(doctorID + "_Doctor.bin"))) {
+                    outputStream.writeObject(doctorObject);
+                    System.out.println("Doctor object saved to file: " + doctorID + "_Doctor.bin");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                
+                Stage currentStage = (Stage) createAccountButton.getScene().getWindow();
+                currentStage.close();
+
+                // OPEN THE DASHBOARD
+//                openMainDashboard();
+            }
         });
 
         grid.getChildren().addAll(createAccountTitle, warning, firstNameLabel, firstNameField, lastNameLabel, lastNameField,
@@ -159,11 +180,11 @@ public void start(Stage primaryStage) {
         return grid;
     }
     
-    private void openMainDashboard() {
-        Main main = new Main();
-        Stage mainStage = new Stage();
-        main.start(mainStage);
-    }
+//    private void openMainDashboard() {
+//        Main main = new Main();
+//        Stage mainStage = new Stage();
+//        main.start(mainStage);
+//    }
     
     public Scene createScene() {
     	HBox topBar = createTopBar();
@@ -179,8 +200,15 @@ public void start(Stage primaryStage) {
         Scene scene = new Scene(mainRoot, 800, 450); // Extend the window height
         return scene;
     }
-
-    public static void main(String[] args) {
-        launch(args);
+    
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
+
+//    public static void main(String[] args) {
+//        launch(args);
+//    }
 }
