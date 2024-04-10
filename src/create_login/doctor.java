@@ -1,5 +1,8 @@
 package create_login;
-public class doctor {
+
+import java.io.Serializable;
+
+public class doctor implements Serializable {
     private String firstName;
     private String lastName;
     private String prescription;
