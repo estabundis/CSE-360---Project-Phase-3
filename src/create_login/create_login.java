@@ -41,7 +41,7 @@ public class create_login extends Application {
         root.setPadding(new Insets(20));
 
         // Set the background color
-        root.setStyle("-fx-background-color: #f0f0f0;");
+        root.setStyle("-fx-background-color: white;");
 
         // Create the scene with wider width
         VBox mainRoot = new VBox(topBar, root, bottomBar);
