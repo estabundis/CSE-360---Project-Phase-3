@@ -17,6 +17,7 @@ public class Patient implements Serializable
 	private String patientID;
 	private List<String> healthHistory;
 	private List<messages> portal;
+	private List<String> reports;
 
 
 	// Methods
@@ -26,6 +27,7 @@ public class Patient implements Serializable
 	public Patient()
 	{
 		this.healthHistory = new ArrayList<String>();
+		this.reports = new ArrayList<String>();
 	}
 	
 	// Setter for firstName
@@ -33,6 +35,13 @@ public class Patient implements Serializable
         this.firstName = firstName;
     }
 
+    public void addRopert(String report) {
+    	reports.add(report);
+    }
+    
+    public List<String> getReports(){
+    	return reports;
+    }
     // Setter for lastName
     public void setLastName(String lastName) {
         this.lastName = lastName;
