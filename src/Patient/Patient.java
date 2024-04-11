@@ -7,6 +7,7 @@ import java.io.Serializable;
 
 public class Patient implements Serializable
 {
+	private static final long serialVersionUID = 1075108330019132291L;
 	// Attributes
 	private String firstName;
 	private String lastName;
@@ -26,6 +27,31 @@ public class Patient implements Serializable
 	{
 		this.healthHistory = new ArrayList<String>();
 	}
+	
+	// Setter for firstName
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    // Setter for lastName
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    // Setter for birthday
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    // Setter for email
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    // Setter for password
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
 	// Method to create an account
 	public void createAccount(String firstName, String lastName, String birthday, String email, String password)

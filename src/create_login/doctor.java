@@ -7,7 +7,7 @@ import Patient.Patient;
 import java.io.Serializable;
 
 public class doctor implements Serializable {
-    private String firstName;
+    private String firstName; 
     private String lastName;
     private String prescription;
     private List<messages> portal;

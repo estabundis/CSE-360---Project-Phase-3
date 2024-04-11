@@ -13,6 +13,7 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -23,8 +24,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 
-public class Profile extends Application {
-	public void start(Stage primaryStage) {
+public class Profile {
+	
+	public void profile(Stage primaryStage, Patient patient) {
 		// Create a BorderPane as the root node
         BorderPane root = new BorderPane();
         
@@ -32,7 +34,7 @@ public class Profile extends Application {
         VBox leftContent = previewView();
         leftContent.setStyle("-fx-background-color: #0000ff;");
         
-        GridPane gridpane = detailView();
+        GridPane gridpane = detailView(primaryStage, patient);
         gridpane.setStyle("-fx-background-color: white;");
         
         // Set a fixed width for the left side
@@ -45,7 +47,7 @@ public class Profile extends Application {
         root.setCenter(gridpane);
         
         // Create a scene and add it to the stage
-        Scene scene = new Scene(root, 1000, 700);
+        Scene scene = new Scene(root, 1030, 700);
         primaryStage.setScene(scene);
         
         // Set the title of the stage and show it
@@ -53,9 +55,7 @@ public class Profile extends Application {
         primaryStage.show();
 	}
 	
-	public static void main(String[] args) {
-		launch(args);
-	}
+	
 	
 	public VBox createVBox() {
 		VBox vbox = new VBox();
@@ -65,7 +65,7 @@ public class Profile extends Application {
 	}
 	
 	// Create the Personal details side view 
-	public GridPane detailView() {
+	public GridPane detailView(Stage primaryStage, Patient patient) {
 		
 		// Create GridPane for each element
 		GridPane gridPane = new GridPane();
@@ -104,9 +104,9 @@ public class Profile extends Application {
         GridPane.setConstraints(lName, 1, 3);
         GridPane.setConstraints(lastName, 1, 4);
         
-        Button saveName = new Button("Save");
-        saveName.setStyle("-fx-background-color: #0000ff; -fx-text-fill: white;");
-        GridPane.setConstraints(saveName, 0, 5, 2, 1);
+//        Button saveName = new Button("Save");
+//        saveName.setStyle("-fx-background-color: #0000ff; -fx-text-fill: white;");
+//        GridPane.setConstraints(saveName, 0, 5, 2, 1);
         
          // Email 	
         Separator separator1 = new Separator();
@@ -134,9 +134,9 @@ public class Profile extends Application {
         GridPane.setConstraints(password, 1, 8);
         GridPane.setConstraints(pwBox, 1, 9);
         
-        Button savePass = new Button("Save");
-        savePass.setStyle("-fx-background-color: #0000ff; -fx-text-fill: white;");
-        GridPane.setConstraints(savePass, 0, 10, 2, 1);
+//        Button savePass = new Button("Save");
+//        savePass.setStyle("-fx-background-color: #0000ff; -fx-text-fill: white;");
+//        GridPane.setConstraints(savePass, 0, 10, 2, 1);
 
 		// Pharmacy 
         Separator separator2 = new Separator();
@@ -162,9 +162,9 @@ public class Profile extends Application {
         
         GridPane.setConstraints(check, 1, 14);
         
-        Button savePhar = new Button("Save");
-        savePhar.setStyle("-fx-background-color: #0000ff; -fx-text-fill: white;");
-        GridPane.setConstraints(savePhar, 0, 15, 2, 1);
+//        Button savePhar = new Button("Save");
+//        savePhar.setStyle("-fx-background-color: #0000ff; -fx-text-fill: white;");
+//        GridPane.setConstraints(savePhar, 0, 15, 2, 1);
         
 		// Password
         Separator separator3 = new Separator();
@@ -197,6 +197,30 @@ public class Profile extends Application {
         save.setStyle("-fx-background-color: #0000ff; -fx-text-fill: white;");
         GridPane.setConstraints(save, 0, 21, 2, 1);
         
+        save.setOnAction(e -> {
+        	if(!firstName.getText().isBlank()) {
+        		patient.setFirstName(firstName.getText());
+        		Alert b = new Alert(AlertType.INFORMATION);
+        		b.setContentText("Details have been changed");
+        	}
+        	else if(!lastName.getText().isBlank()) {
+        		patient.setLastName(lastName.getText());
+        		Alert b = new Alert(AlertType.INFORMATION);
+        		b.setContentText("Details have been changed");
+        	}
+        	else if(!emailBox.getText().isBlank()) {
+        		patient.setEmail(emailBox.getText());
+        		Alert b = new Alert(AlertType.INFORMATION);
+        		b.setContentText("Details have been changed");
+        	}
+        	else if(!nPassBox.getText().isBlank()) {
+        		patient.setPassword(nPassBox.getText());
+        		Alert b = new Alert(AlertType.INFORMATION);
+        		b.setContentText("Details have been changed");
+        	}
+        	
+        });
+        
         Label repass = new Label("Re-enter New Password");
         repass.setFont(Font.font("Arial", FontWeight.BOLD, 10));
         TextArea repassBox = new TextArea();
@@ -209,19 +233,16 @@ public class Profile extends Application {
         GridPane.setConstraints(back, 0, 22, 2, 1);
         back.setStyle("-fx-background-color: #0000ff; -fx-text-fill: white;");
         
-//        back.setOnAction(e -> {
-//            // close stage
-//            Stage currentStage = (Stage)back.getScene().getWindow();
-//            currentStage.close();
-//
-//            openMainDashboard();
-//        });
+        back.setOnAction(e -> {
+            // close stage
+        	Main.PatientDash(primaryStage, patient);
+        });
         
         gridPane.getChildren().addAll(
                 detailTitle, separator, nameTitle,
-                fName, firstName,lName, lastName,saveName,
-                separator1, emailTitle, emailAdd, emailBox, password, pwBox,savePass,
-                separator2, pharmacy, pph, pphBox, check, savePhar, 
+                fName, firstName,lName, lastName,
+                separator1, emailTitle, emailAdd, emailBox, password, pwBox,
+                separator2, pharmacy, pph, pphBox, check,  
                 separator3, pass, oPass, oPassBox, nPass, nPassBox, save, repass, repassBox, back);
 		
 		return gridPane;

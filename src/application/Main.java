@@ -3,7 +3,7 @@ package application;
 import Messaging.messages;
 import Patient.*;
 import create_login.doctor;
-//import Patient.Healthform;
+import Profile.Profile;
 
 import javafx.scene.control.Label;
 
@@ -94,7 +94,7 @@ public class Main {
     }
     
     public static void PatientDash(Stage primaryStage, Patient patient) {
-BorderPane root = new BorderPane();
+    	BorderPane root = new BorderPane();
         
         // Create a VBox on the left side
         VBox leftBox = new VBox();
@@ -109,9 +109,14 @@ BorderPane root = new BorderPane();
         homeButton.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
         
         
-        Button healthFormButton = new Button("HEALTH FORM");
+        Button healthFormButton = new Button("PROFILE");
         healthFormButton.setPrefSize(150, 55);
         healthFormButton.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
+        healthFormButton.setOnAction(e -> 
+        	{Profile p = new Profile();
+        	p.profile(primaryStage, patient);
+        	
+        	});
         
         Button messageButton = new Button("MESSAGE");
         messageButton.setPrefSize(150, 55);
