@@ -1,15 +1,22 @@
 package Patient;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
 import application.Main;
+import create_login.doctor;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -21,18 +28,17 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-public class Healthform extends Application {
+public class Healthform {
 
-    @Override
-    public void start(Stage primaryStage) {
+    public void healthform(Stage primaryStage, doctor mydoctor) {
         // Create a BorderPane as the root node
         BorderPane root = new BorderPane();
         
         // Create content for the left side (1/4 of the scene)
         VBox leftContent = previewView();
         leftContent.setStyle("-fx-background-color: #0000ff;");
-        
-        GridPane gridpane = detailView();
+         
+        GridPane gridpane = detailView(primaryStage, mydoctor);
         gridpane.setStyle("-fx-background-color: white;");
         
         // Set a fixed width for the left side
@@ -102,7 +108,7 @@ public class Healthform extends Application {
 		
 	}
     
-	public GridPane detailView() {
+	public GridPane detailView(Stage primaryStage, doctor mydoctor) {
 			
 			// Create GridPane for each element
 			GridPane gridPane = new GridPane();
@@ -227,20 +233,56 @@ public class Healthform extends Application {
 	        hbox7.getChildren().addAll(insurance, insuBox, policy, policyBox);
 	        GridPane.setConstraints(hbox7, 0, 8, 2, 1);
 	        
+	        HBox hbox9 = new HBox(20);
+	        TextArea ID = new TextArea();
+	        ID.setPrefRowCount(1);
+	        ID.setMaxWidth(200);
+	        Label IDE = new Label("Patient ID");
+	        IDE.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+	        
 	        Button save = new Button("Save");
-	        GridPane.setConstraints(save, 0, 9, 2, 1);
+	        GridPane.setConstraints(save, 0, 11, 2, 1);
 	        save.setStyle("-fx-background-color: #0000ff; -fx-text-fill: white;");
+	        save.setOnAction(e ->{
+
+		        String filename = ID.getText()+"_patient.bin";
+				try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filename))) {
+		            Patient obj = (Patient) objectInputStream.readObject();
+		            System.out.println("Object read from file: " + obj.getFirstName());
+		            Main.Dashboard(primaryStage, obj);
+		            String report = "Allergies: " + allergiesBox.getText() + "\nPrescriptions: " + prescriptionsBox.getText();
+		            report += "Previous Ailments: " + preailBox.getText() + "\nHeight: " + heightBox.getText() + "\nBloodPressure: " + bloodBox.getText();
+		            report += "Weight: " + weightBox.getText() + "Body Temp.: " + tempBox.getText() + "InsuranceID: " +  insuBox.getText();
+		            report += "Policy Number: " + policyBox.getText();
+		            obj.addHistory(report);
+		            System.out.println(report);
+		            Main.Dashboard(primaryStage, mydoctor);
+		        } catch (IOException | ClassNotFoundException ex) {
+		            ex.printStackTrace();
+		            Alert b = new Alert(AlertType.NONE);
+            		b.setAlertType(AlertType.INFORMATION);
+            		b.setContentText("Please enter a valid id");
+            		b.show();
+		        }
+	        }
+	        		);
 	        
 	        Button back = new Button("Go Back");
-	        GridPane.setConstraints(back, 0, 10, 2, 1);
+	        GridPane.setConstraints(back, 0, 12, 2, 1);
 	        back.setStyle("-fx-background-color: #0000ff; -fx-text-fill: white;");
 	        
-//	        back.setOnAction(e -> Main.Dashboard(primaryStage, mine));
+	        back.setOnAction(e -> Main.Dashboard(primaryStage, mydoctor));
+	        
+	        
+	        
+	        hbox9.getChildren().addAll(IDE, ID);
+	        GridPane.setConstraints(hbox9, 0, 10, 2, 1);
+	        
 	        
 	        gridPane.getChildren().addAll(
 	                detailTitle, separator, check,
 	                vbox, hbox3,hbox4, hbox5,hbox6,
-	                hbox7, save, back);
+	                hbox7,hbox9, save, back);
 			
 			return gridPane;
 		}

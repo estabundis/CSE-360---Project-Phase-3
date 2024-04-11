@@ -31,7 +31,7 @@ public class create_login extends Application{
     }
 
     public void start(Stage primaryStage) {
-        // Create the top blue bar
+        // Create the top blue bar 
         HBox topBar = createTopBar();
 
         // Create the login section
@@ -285,7 +285,7 @@ public class create_login extends Application{
         });
 
         grid.getChildren().addAll(createAccountTitle, firstNameLabel, firstNameField, lastNameLabel, lastNameField,
-                passwordLabel, passwordField, reEnterPasswordLabel, reEnterPasswordField, emailLabel, emailField,
+                passwordLabel	, passwordField, reEnterPasswordLabel, reEnterPasswordField, emailLabel, emailField,
                 createAccountButton, createStaffAccountButton);
 
         return grid;

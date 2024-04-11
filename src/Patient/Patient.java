@@ -24,7 +24,7 @@ public class Patient implements Serializable
 	// This will be use when the patients enter their input
 	public Patient()
 	{
-		this.healthHistory = new ArrayList<>();
+		this.healthHistory = new ArrayList<String>();
 	}
 
 	// Method to create an account
@@ -99,6 +99,10 @@ public class Patient implements Serializable
     	Random random = new Random();
     	uniqueNum = random.nextInt(90000) + 10000;
     	return Integer.toString(uniqueNum);
+	}
+	
+	public void addHistory(String history) {
+		healthHistory.add(history);
 	}
 
 	private void displayUserOptions() {
