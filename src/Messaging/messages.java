@@ -1,3 +1,4 @@
+
 package Messaging;
 
 import java.util.ArrayList;
@@ -11,22 +12,37 @@ public class messages {
     private List<String> people;
 
     // Constructor
-    public messages(String personA, String personB) {
+    public messages(String personA) {
         messageThread = new ArrayList<ArrayList<String>>();
         people = new ArrayList<String>();
         people.add(personA);
-        people.add(personB);
     }
 
     public void sendMessage(String person, String Content) {
-    	if(person!=getPerson1() & person!=getPerson2()) {
+    	if(person != checkPer(person)) {
     		System.out.println("Person does not exist in this thread");
     		return;
-    	}
-    	ArrayList<String> dict= new ArrayList<String>();
-    	dict.add(person);
+    	} else if (person == getintiP()) {
+        System.out.println("Can't Send Message to Yourself");
+        return; 
+        }
+
+    	ArrayList<String> dict = new ArrayList<String>();
+    	dict.add(getintiP());
     	dict.add(Content);
         messageThread.add(dict);
+
+        System.out.println("Message Sent Successfully!\n");
+    }
+
+    public void addPerson(String person) {
+        
+        if (people.contains(person)) 
+        System.out.println("Person already added to Portal");
+        else {
+            people.add(person);
+        }
+
     }
 
     // Getters and setters for people
@@ -35,24 +51,24 @@ public class messages {
     }
 
  // Getters and setters for people
-    public String getPerson1() {
+    public String getintiP() {
         return people.get(0);
     }
  // Getters and setters for people
-    public String getPerson2() {
-        return people.get(1);
+    public String checkPer(String person) {
+
+        if (people.contains(person))
+        return person;
+        
+        return null;
+
     }
     
     public String toString() {
     	String value = "";
-    	for(int i =0; i<messageThread.size();i++) {
+    	for(int i =0; i<messageThread.size(); i++) {
     		ArrayList<String> dict = messageThread.get(i);
-    		if(dict.get(0)==getPerson1()) {
-    			value += "Dr."+ dict.get(0)+ ": "+ dict.get(1);
-    		}
-    		else {
-    			value += dict.get(0)+": "+ dict.get(1);
-    		}
+    		value += dict.get(0)+": "+ dict.get(1);
     		value += "\n";
     	}
 		return value;
