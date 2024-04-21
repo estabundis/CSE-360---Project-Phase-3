@@ -22,6 +22,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -30,7 +31,7 @@ import javafx.stage.Stage;
 
 public class Healthform {
 
-    public void healthform(Stage primaryStage, doctor mydoctor) {
+    public void healthform(StackPane stack, doctor mydoctor) {
         // Create a BorderPane as the root node
         BorderPane root = new BorderPane();
         
@@ -38,14 +39,14 @@ public class Healthform {
         VBox leftContent = previewView();
         leftContent.setStyle("-fx-background-color: #0000ff;");
          
-        GridPane gridpane = detailView(primaryStage, mydoctor);
+        GridPane gridpane = detailView(mydoctor);
         gridpane.setStyle("-fx-background-color: white;");
         
         // Set a fixed width for the left side
         leftContent.setPrefWidth(200);
         
         // Add the left content to the left region of the BorderPane
-        root.setLeft(leftContent);
+//        root.setLeft(leftContent);
         
         // Create content for the center (remaining space)
         VBox centerContent = new VBox();
@@ -60,13 +61,15 @@ public class Healthform {
         // Add the center content to the center region of the BorderPane
         root.setCenter(gridpane);
         
-        // Create a scene and add it to the stage
-        Scene scene = new Scene(root, 1000, 700);
-        primaryStage.setScene(scene);
         
-        // Set the title of the stage and show it
-        primaryStage.setTitle("Fixed Size Example");
-        primaryStage.show();
+        stack.getChildren().add(root);
+        // Create a scene and add it to the stage
+//        Scene scene = new Scene(root, 1000, 700);
+//        primaryStage.setScene(scene);
+//        
+//        // Set the title of the stage and show it
+//        primaryStage.setTitle("Fixed Size Example");
+//        primaryStage.show();
     }
     
 	public VBox previewView() {
@@ -108,7 +111,7 @@ public class Healthform {
 		
 	}
     
-	public GridPane detailView(Stage primaryStage, doctor mydoctor) {
+	public GridPane detailView( doctor mydoctor) {
 			
 			// Create GridPane for each element
 			GridPane gridPane = new GridPane();
@@ -249,14 +252,14 @@ public class Healthform {
 				try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filename))) {
 		            Patient obj = (Patient) objectInputStream.readObject();
 		            System.out.println("Object read from file: " + obj.getFirstName());
-		            Main.Dashboard(primaryStage, obj);
+//		            Main.Dashboard(primaryStage, obj);
 		            String report = "Allergies: " + allergiesBox.getText() + "\nPrescriptions: " + prescriptionsBox.getText();
 		            report += "Previous Ailments: " + preailBox.getText() + "\nHeight: " + heightBox.getText() + "\nBloodPressure: " + bloodBox.getText();
 		            report += "Weight: " + weightBox.getText() + "Body Temp.: " + tempBox.getText() + "InsuranceID: " +  insuBox.getText();
 		            report += "Policy Number: " + policyBox.getText();
 		            obj.addHistory(report);
 		            System.out.println(report);
-		            Main.Dashboard(primaryStage, mydoctor);
+//		            Main.Dashboard(primaryStage, mydoctor);
 		        } catch (IOException | ClassNotFoundException ex) {
 		            ex.printStackTrace();
 		            Alert b = new Alert(AlertType.NONE);
@@ -267,11 +270,11 @@ public class Healthform {
 	        }
 	        		);
 	        
-	        Button back = new Button("Go Back");
-	        GridPane.setConstraints(back, 0, 12, 2, 1);
-	        back.setStyle("-fx-background-color: #0000ff; -fx-text-fill: white;");
+//	        Button back = new Button("Go Back");
+//	        GridPane.setConstraints(back, 0, 12, 2, 1);
+//	        back.setStyle("-fx-background-color: #0000ff; -fx-text-fill: white;");
 	        
-	        back.setOnAction(e -> Main.Dashboard(primaryStage, mydoctor));
+//	        back.setOnAction(e -> Main.Dashboard(primaryStage, mydoctor));
 	        
 	        
 	        
@@ -282,7 +285,7 @@ public class Healthform {
 	        gridPane.getChildren().addAll(
 	                detailTitle, separator, check,
 	                vbox, hbox3,hbox4, hbox5,hbox6,
-	                hbox7,hbox9, save, back);
+	                hbox7,hbox9, save);
 			
 			return gridPane;
 		}

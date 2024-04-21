@@ -15,6 +15,7 @@ public class Patient implements Serializable
 	private String email;
 	private String password;
 	private String patientID;
+	private doctor Doctor;
 	private List<String> healthHistory;
 	private List<messages> portal;
 	private List<String> reports;
@@ -28,6 +29,18 @@ public class Patient implements Serializable
 	{
 		this.healthHistory = new ArrayList<String>();
 		this.reports = new ArrayList<String>();
+	}
+	
+	public String getID() {
+		return patientID;
+	}
+	
+	public void addDoctor(doctor dd) {
+		this.Doctor = dd;
+	}
+	
+	public doctor getdd() {
+		return Doctor;
 	}
 	
 	// Setter for firstName

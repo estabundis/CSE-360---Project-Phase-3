@@ -1,10 +1,13 @@
 package application;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import Messaging.messages;
+import Messaging.messui;
 import Patient.*;
 import create_login.doctor;
 import Profile.Profile;
@@ -44,6 +47,7 @@ public class Main {
     public static void Dashboard(Stage primaryStage, Object currentUser) {
     	if(currentUser instanceof Patient) {
     		Patient myPatient = (Patient) currentUser;
+    		System.out.print("hell");
     		PatientDash(primaryStage, myPatient);
     	}
     	else if(currentUser instanceof doctor){
@@ -54,6 +58,11 @@ public class Main {
     }
     
     public static void DoctorDash(Stage primaryStage, doctor Doctor) {
+    	StackPane shareable = new StackPane();
+//      shareable.setStyle("-fx-background-color: red;");
+      shareable.setPrefWidth(1000);
+      shareable.setPrefHeight(100);
+      StackPane.setAlignment(shareable, Pos.BOTTOM_RIGHT);
     	BorderPane root = new BorderPane();
         
         // Create a VBox on the left side
@@ -67,6 +76,10 @@ public class Main {
         Button homeButton = new Button("HOME");
         homeButton.setPrefSize(150, 55);
         homeButton.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
+        homeButton.setOnAction(e -> {
+        	shareable.getChildren().clear();
+        });
+        
         
         
         Button healthFormButton = new Button("HEALTH FORM");
@@ -74,7 +87,7 @@ public class Main {
         healthFormButton.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
         healthFormButton.setOnAction(e -> {
         	Healthform a = new Healthform();
-        	a.healthform(primaryStage, Doctor);
+        	a.healthform(shareable, Doctor);
 //        	System.out.println("hell");
         });
         
@@ -100,8 +113,8 @@ public class Main {
         		try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filename))) {
                     Patient obj = (Patient) objectInputStream.readObject();
                     // Process the object as needed
-                    
-                    viewReports(primaryStage, obj);
+                    popupStage.close();
+                    viewReports(obj);
                 } catch (IOException | ClassNotFoundException ex) {
                     ex.printStackTrace();
                 }
@@ -117,6 +130,41 @@ public class Main {
         Button messageButton = new Button("MESSAGE");
         messageButton.setPrefSize(150, 55);
         messageButton.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
+        
+        messageButton.setOnAction(e -> {
+        	Stage popupStage = new Stage();
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.setTitle("Patient Information");
+
+            Label patientIdLabel = new Label("Patient ID:");
+            TextField patientIdTextField = new TextField();
+            
+            
+            VBox rot = new VBox(20);
+            rot.getChildren().addAll(patientIdLabel,patientIdTextField );
+            HBox coot = new HBox();
+            Button viewButton = new Button("View");
+            viewButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 16px; -fx-pref-width: 150px;");
+            viewButton.setOnAction(x -> {
+            	String filename = patientIdTextField.getText()+"_patient.bin";
+        		try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filename))) {
+                    Patient obj = (Patient) objectInputStream.readObject();
+                    // Process the object as needed
+                    
+                    messui m = new messui();
+                    m.messui(primaryStage, Doctor, obj, false);
+                    popupStage.close();
+                } catch (IOException | ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+            });
+            coot.getChildren().addAll(rot, viewButton);
+            StackPane sss = new StackPane();
+            sss.getChildren().addAll(coot);
+            Scene scene = new Scene(sss, 1000, 700);
+            popupStage.setScene(scene);
+            popupStage.show();
+        });
         
         Button otherButton = new Button("PATIENT REPORT");
         otherButton.setPrefSize(150, 55);
@@ -134,6 +182,9 @@ public class Main {
         root.setLeft(leftBox);
         root.setTop(blue);
         
+//        root.getChildren().add(shareable);
+        root.setRight(shareable);
+        
         
         
         Scene scene = new Scene(root, 1000, 600);
@@ -141,7 +192,7 @@ public class Main {
         primaryStage.show();
     }
     
-    private static void viewReports(Stage primaryStage, Patient obj) {
+    private static void viewReports(Patient obj) {
 		TextArea Reports = new TextArea();
 		String value = "";
 		int kk = 1;
@@ -149,6 +200,14 @@ public class Main {
 			value += "Report " + kk + ":\n" + item + "\n";
 			kk++;
 		}
+		Reports.setText(value);
+		Reports.setEditable(false);
+		StackPane root = new StackPane();
+		root.getChildren().add(Reports);
+		Scene scene= new Scene(root, 400, 400);
+		Stage primary = new Stage();
+		primary.setScene(scene);
+		primary.show();
 		
 	}
 
@@ -183,6 +242,12 @@ public class Main {
                     Patient obj = (Patient) objectInputStream.readObject();
                     // Process the object as needed
                     obj.addRopert(reportTextArea.getText());
+                    try (ObjectOutputStream k = new ObjectOutputStream(new FileOutputStream(file))) {
+                    	k.writeObject(obj);
+                    }
+                    catch (IOException exe) {
+                        exe.printStackTrace();
+                    }
                     System.out.println("Object read from file: " + obj.getFirstName());
                     Main.Dashboard(primaryStage, mdoctor);
                 } catch (IOException | ClassNotFoundException ex) {
@@ -244,12 +309,21 @@ public class Main {
         Button messageButton = new Button("MESSAGE");
         messageButton.setPrefSize(150, 55);
         messageButton.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
+        messageButton.setOnAction(b -> {
+        	messui m = new messui();
+            try {
+				m.messui(primaryStage, patient.getdd(), patient, true);
+			} catch (ClassNotFoundException | IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+            });
         
         Button otherButton = new Button("Report");
         otherButton.setPrefSize(150, 55);
         otherButton.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
         otherButton.setOnAction(e -> {
-        	viewReports(primaryStage, patient);
+        	viewReports(patient);
         });
         HBox blue = new HBox();
         blue.setStyle("-fx-background-color: blue;");
@@ -261,8 +335,7 @@ public class Main {
         // Set VBox on the left side of the BorderPane
         root.setLeft(leftBox);
         root.setTop(blue);
-        Scene scene = new Scene(root, 1000, 600);
+        Scene scene = new Scene(root, 1000, 700);
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
-}
+    }}

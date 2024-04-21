@@ -1,48 +1,35 @@
-
 package Messaging;
 
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class messages {
+public class messages implements Serializable {
     // ArrayList to store messages in the thread
     private ArrayList<ArrayList<String>> messageThread;
     // List to store people involved in the conversation
     private List<String> people;
 
     // Constructor
-    public messages(String personA) {
+    public messages(String personA, String personB) {
         messageThread = new ArrayList<ArrayList<String>>();
         people = new ArrayList<String>();
         people.add(personA);
+        people.add(personB);
     }
 
     public void sendMessage(String person, String Content) {
-    	if(person != checkPer(person)) {
+    	if(person.equals(getPerson1()) & person.equals(getPerson2())) {
     		System.out.println("Person does not exist in this thread");
     		return;
-    	} else if (person == getintiP()) {
-        System.out.println("Can't Send Message to Yourself");
-        return; 
-        }
-
-    	ArrayList<String> dict = new ArrayList<String>();
-    	dict.add(getintiP());
+    	}
+    	ArrayList<String> dict= new ArrayList<String>();
+    	dict.add(person);
     	dict.add(Content);
         messageThread.add(dict);
-
-        System.out.println("Message Sent Successfully!\n");
-    }
-
-    public void addPerson(String person) {
-        
-        if (people.contains(person)) 
-        System.out.println("Person already added to Portal");
-        else {
-            people.add(person);
-        }
-
     }
 
     // Getters and setters for people
@@ -51,26 +38,38 @@ public class messages {
     }
 
  // Getters and setters for people
-    public String getintiP() {
+    public String getPerson1() {
         return people.get(0);
     }
  // Getters and setters for people
-    public String checkPer(String person) {
-
-        if (people.contains(person))
-        return person;
-        
-        return null;
-
+    public String getPerson2() {
+        return people.get(1);
     }
     
     public String toString() {
     	String value = "";
-    	for(int i =0; i<messageThread.size(); i++) {
+    	for(int i =0; i<messageThread.size();i++) {
     		ArrayList<String> dict = messageThread.get(i);
-    		value += dict.get(0)+": "+ dict.get(1);
+    		if(dict.get(0)==getPerson1()) {
+    			value += "Dr."+ dict.get(0)+ ": "+ dict.get(1);
+    		}
+    		else {
+    			value += dict.get(0)+": "+ dict.get(1);
+    		}
     		value += "\n";
     	}
 		return value;
     }
-}
+    
+    public void fileSave() {
+        String fileName = getPerson1() + "_" + getPerson2() + "_mm.bin";
+        try (FileOutputStream fileOut = new FileOutputStream(fileName);
+             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
+            objectOut.writeObject(this); // Writes the object to the file
+            System.out.println("Message thread saved to " + fileName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error saving message thread to file.");
+        }
+    }
+    }
